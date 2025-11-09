@@ -1,0 +1,28 @@
+name: ucar-topdoer-test
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: test_app
+      POSTGRES_USER: test_app
+      POSTGRES_PASSWORD: test_app
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: pytest tests/
+    environment:
+      DATABASE__URL: postgresql+asyncpg://test_app:test_app@db:5432/test_app
+      DATABASE__ECHO: false
+    depends_on:
+      - db
+
+volumes:
+  postgres_test_data:
+
