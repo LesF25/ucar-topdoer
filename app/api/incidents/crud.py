@@ -2,8 +2,7 @@ from sqlalchemy import select, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Incident
-from .schemas import IncidentCreateRequest, IncidentUpdatePartialRequest
-from app.core.structures import IncidentStatus
+from .schemas import IncidentCreateRequest, IncidentUpdatePartialRequest, IncidentGetRequest
 
 
 async def create_incident(
@@ -20,11 +19,11 @@ async def create_incident(
 
 async def get_incidents(
     session: AsyncSession,
-    statuses: list[IncidentStatus] | None = None,
+    dto: IncidentGetRequest,
 ) -> list[Incident]:
     statement = select(Incident)
 
-    if statuses:
+    if statuses := dto.statuses:
         statement = statement.where(
             Incident.status.in_(statuses)
         )

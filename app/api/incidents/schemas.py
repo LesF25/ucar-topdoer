@@ -29,3 +29,7 @@ class IncidentResponse(IncidentBase):
 
 class IncidentUpdatePartialRequest(BaseModel):
     status: IncidentStatus
+
+
+class IncidentGetRequest(BaseModel):
+    statuses: list[IncidentStatus] | None = None

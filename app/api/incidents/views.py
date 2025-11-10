@@ -6,11 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Incident
 from ..dependencies import get_db_session
 from .dependencies import get_incident_by_id
-from app.core.structures import IncidentStatus
 from .schemas import (
     IncidentCreateRequest,
     IncidentResponse,
     IncidentUpdatePartialRequest,
+    IncidentGetRequest,
 )
 from . import crud
 
@@ -38,12 +38,9 @@ async def create_incident(
 )
 async def get_incidents(
     session: Annotated[AsyncSession, Depends(get_db_session)],
-    statuses: Annotated[
-        list[IncidentStatus] | None,
-        Query(),
-    ] = None,
+    dto: Annotated[IncidentGetRequest, Query()],
 ):
-    return await crud.get_incidents(session, statuses)
+    return await crud.get_incidents(session, dto)
 
 
 @router.patch(
